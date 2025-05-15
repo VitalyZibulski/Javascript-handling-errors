@@ -11,11 +11,11 @@ class PaymentError extends Error {
     }
 }
 
-function makePayment() {
+async function makePayment() {
     const availableFunds = 50;
     const payment = 60;
 
-    if (payment > availableFunds) { // or transaction.payment > availableFunds use else case
+    if (payment > availableFunds) {
         throw new PaymentError('insufficient_funds', `User tried to ${payment} with available funds ${availableFunds}`);
     }
 
@@ -23,7 +23,7 @@ function makePayment() {
 }
 
 try {
-   makePayment(); 
+   await makePayment(); // for aync function becuse without won't catch errors
 } catch(err) {
     if (err instanceof PaymentError) {
         if (err.code === 'insufficient_funds') {
@@ -34,8 +34,9 @@ try {
         if (err.code === 'invalid_card') {
     
         }
-    } else {
-        alert('Something went wrong! Please contact support');
-        console.log(err.message);
     }
 }
+
+// with the same case and use async makePayment, we won't have any error like alert
+// in console log will be Uncaught(in promise) ReferenceError: transaction is not defined as makePayment
+// await should be added like resolve()
